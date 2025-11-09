@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dracula" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(${patio.id == null} ? 'Novo Pátio' : 'Editar Pátio')}"></head>
+<body class="bg-black text-green-400 min-h-screen flex flex-col">
+<!-- Header -->
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<div class="container mx-auto p-6 max-w-lg">
+    <h1 class="text-2xl font-bold mb-4" th:text="${patio.id == null} ? 'Cadastrar Pátio' : 'Editar Pátio'"></h1>
+
+    <div th:if="${message}" class="alert alert-success mb-4" th:text="${message}"></div>
+
+    <form th:object="${patio}"
+          th:action="${patio.id == null} ? @{/patio/form} : @{/patio/{id}(id=${patio.id})}"
+          method="post" class="space-y-4">
+    <input type="hidden" th:if="${patio.id != null}" th:field="*{id}" />
+    <input type="hidden" th:if="${patio.id != null}" name="_method" value="put"/>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div class="form-control">
+            <label class="label"><span class="label-text text-green-300">Nome</span></label>
+            <input th:field="*{nome}" class="input input-bordered bg-gray-900 text-green-200" placeholder="Nome do Pátio" required/>
+            <p th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="text-error text-sm mt-1"></p>
+        </div>
+
+        <div class="flex space-x-2">
+            <button type="submit" class="btn btn-success">Salvar</button>
+            <a href="/patio" class="btn btn-ghost">Cancelar</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
